@@ -3,8 +3,8 @@ Script that enumerates directories in a domain using a dictionary. Create a blac
 
 ## Prepare
 ```
->> git clone https://github.com/TheManuelML/dirEnumeration
->> cd dirEnumeration
+>> git clone https://github.com/TheManuelML/webFuzzer
+>> cd webFuzzer
 
 >> python3 -m venv venv
 >> source venv/bin/activate
