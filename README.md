@@ -1,5 +1,5 @@
-# dirEnumeration
-Script that enumerates directories in a domain using a dictionary. Create a blacklist to exclude specific status codes. 
+# Directory enumeration
+Script that enumerates directories in a domain using a dictionary. Create a blacklist to exclude specific status codes. Up to 30 searches every 10 seconds.
 
 ## Prepare
 ```
@@ -16,3 +16,6 @@ Script that enumerates directories in a domain using a dictionary. Create a blac
 ```
 >> python3 pyBuster.py --help
 ```
+
+## Example
+![Example_image](https://github.com/TheManuelML/dirEnumeration/assets/82970354/69ea1b3c-0320-43b4-884c-e355da9df3f9)
