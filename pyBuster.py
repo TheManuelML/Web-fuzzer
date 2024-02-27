@@ -1,15 +1,15 @@
 ## Libraries
-import subprocess
 import argparse
 import signal
 import sys
+import requests
+from pwn import log
 from time import strftime
-from pwn import log, context
 from termcolor import colored
 
 
 ## Version
-__version__ = "1.0"
+__version__ = '1.1'
 
 
 ## Arguments / Flags / Parameters
@@ -22,18 +22,15 @@ parser.add_argument("-w", "--wordlist", action="store",help="add the path to the
 argument = parser.parse_args()
 
 
-## Configure pwn context
-context.log_level = "info"
-
 ## Saving user data
 url = argument.url
 wordlist = argument.wordlist
 
-## Creating the blcklist of status codes
+## Creating the blacklist of status codes
 if argument.blacklist:
     blacklist = set(argument.blacklist)
 
-## Variable to count succesful codes
+## Variable to count successful codes
 success = 0
 
 
@@ -52,18 +49,18 @@ def init():
     global prog
 
     ## Printing info about the enumeration
-    print("===================ENUMERATING========================")
+    print("=================  ENUMERATING  ======================")
     print(f"Date: {strftime('%d/%m/%Y')}")
     print(f"Time: {strftime('%H:%M')}")
 
     print("\nDomain: " + colored(f"{url}", "cyan"))
-    ## Printing a more undertandable blacklist
+    ## Printing a more understandable blacklist
     printable_blacklist = ""
     for status_code in blacklist:
         printable_blacklist += f"{status_code} "
     print(f"Blacklist: " + colored(f"[ {printable_blacklist}]", "red"))
     print("======================================================")
-    
+
     ## Creating variable for progress
     prog = log.progress("Enumeration") 
     prog.status("Starting [0]")
@@ -87,16 +84,36 @@ def directory_enumeration():
             i += 1 
             prog.status(colored(f"Words tried [{i}] ", "blue"))
 
-            ## Saving directorie in a variable
+            ## Saving endpoint in a variable
             endpoint = line.strip()
-            ## Executing command and saving the output
-            command = subprocess.run(["curl", "-I" , f"{url}/{endpoint}"], capture_output=True, text=True)
+            ## Executing request and saving the response
+            response = requests.head(f"{url}/{endpoint}")
             ## Getting the status code
-            output = command.stdout.split('\n')
-            status_code = output[0].split(' ')[1] if output else '0'
+            status_code = str(response.status_code)
 
             ## Calling the function to print the results
             report(endpoint, status_code)
+
+
+## Function to assing colors to the outputs of the status codes
+def status_codes_colors(blacklisted, status, url, endpoint):
+    ## Assign color depend of the status code
+    if status[0] == '1':
+        color = "blue"
+    elif status[0] == '2':
+        color = "green"
+    elif status[0] == '3':
+        color = "cyan"
+    elif status[0] == '4':
+        color = "red"
+    elif status[0] == '5':
+        color = "orange"
+
+    ## Printing the status code of the url with the endpoint
+    if blacklisted:
+        print(colored("[!] ", "red") + f"{url}/{endpoint} Status: " + colored(f"{status}", color))
+    else:
+        print(colored("[*] ", "green") + f"{url}/{endpoint} Status: " + colored(f"{status}", color))
 
 
 ## Function to print the enumeration results
@@ -104,15 +121,17 @@ def report(endpoint, status):
     ## Declaring some global variables
     global success
 
-    ## Checking status code
+    ## Checking status code and assigning colors to each one
     if status not in blacklist:
-        print(colored(f"[*] ", "green") + f"{url}/{endpoint} Status: " + colored(f"{status}", "green"))
-        ## Add succesful code to the count
+        ## Call function to assign colors
+        status_codes_colors(False, status, url, endpoint)
+        ## Add successful code to the count
         success += 1
     else:
         ## If verbose is active, show blacklist status codes
         if argument.verbose:
-            print(colored(f"[!] ", "red") + f"{url}/{endpoint} Status: " + colored(f"{status}", "red"))
+            ## Call function to assign colors
+            status_codes_colors(True, status, url, endpoint)
     return success
     
 
@@ -120,9 +139,9 @@ def report(endpoint, status):
 if __name__ == "__main__":
     if argument.url and argument.wordlist:
         init()
-        print("=======================END============================")
+        print("\n=====================  END  ==========================")
         ## Print amount of successful codes
-        print("Successful codes: " + colored(f"{success}", "green"))
+        print("Successful status codes: " + colored(f"{success}", "green"))
     else:
         print("Try adding --help to look for the usage")
         print("At least add --url and --wordlist")
