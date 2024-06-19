@@ -1,5 +1,5 @@
 # Directory enumeration
-Script that enumerates directories in a domain using a dictionary. Create a blacklist to exclude specific status codes. Up to 30 searches every 10 seconds.
+Linux script that enumerates directories in a domain using a dictionary. Create a blacklist to exclude specific status codes. Up to 30 searches every 10 seconds.
 
 ## Prepare
 ```
