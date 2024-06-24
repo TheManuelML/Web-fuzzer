@@ -17,5 +17,11 @@ Linux script that enumerates directories in a domain using a dictionary. Create 
 >> python3 pyBuster.py --help
 ```
 
+## Options
+- -b, --blacklist Write a list of status codes that are going to be excepted. By default is only the status code: 404.
+- -u, --url A parameter to add the URL.
+- -v, --verbose Show also the searches that return a status code that is in the blacklist.
+- -w, --wordlist A parameter to add the wordlist used to make the searches.
+
 ## Example
 ![Example_image](https://github.com/TheManuelML/dirEnumeration/assets/82970354/69ea1b3c-0320-43b4-884c-e355da9df3f9)
