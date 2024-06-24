@@ -3,8 +3,8 @@ Linux script that enumerates directories in a domain using a dictionary. Create 
 
 ## Prepare
 ```
->> git clone https://github.com/TheManuelML/webFuzzer
->> cd webFuzzer
+>> git clone https://github.com/TheManuelML/Web-Fuzzer
+>> cd Web-Fuzzer
 
 >> python3 -m venv venv
 >> source venv/bin/activate
@@ -14,7 +14,7 @@ Linux script that enumerates directories in a domain using a dictionary. Create 
 
 ## Run
 ```
->> python3 pyBuster.py --help
+>> python3 fuzzer.py --help
 ```
 
 ## Options
